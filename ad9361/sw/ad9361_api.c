@@ -1512,11 +1512,13 @@ int32_t ad9361_set_tx_fir_en_dis (struct ad9361_rf_phy *phy,
 	int32_t ret = 0;
 
 	if(phy->bypass_tx_fir == !en_dis)
+    printf("bypass tx filter enabled already");
 		return ret;
 
 	phy->bypass_tx_fir = !en_dis;
 	ret = ad9361_validate_enable_fir(phy);
 	if (ret < 0) {
+    printf("error when trying to validate if tx filter is set");
 		phy->bypass_tx_fir = true;
 	}
 
