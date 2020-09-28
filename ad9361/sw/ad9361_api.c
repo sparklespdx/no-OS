@@ -703,21 +703,22 @@ int32_t ad9361_set_rx_sampling_freq (struct ad9361_rf_phy *phy,
 	int32_t ret;
 	uint32_t rx[6], tx[6];
 
-  printf("doing thing");
-  printf("calculating rf clock chain");
+  printf("ad9361_set_rx_sampling_freq is doing thing\n");
+  printf("calling ad9361_calculate_rf_clock_chain\n");
 	ret = ad9361_calculate_rf_clock_chain(phy, sampling_freq_hz,
 		phy->rate_governor, rx, tx);
 	if (ret < 0)
-    printf("rf clock chain calculate failed");
+    printf("rf clock chain calculate failed\n");
 		return ret;
 
-  printf("setting trx clock chain");
+  printf("calling ad9361_set_trx_clock_chain\n");
 	ad9361_set_trx_clock_chain(phy, rx, tx);
 
-  printf("updating rf bandwidth");
+  printf("calling ad9361_update_rf_bandwidth\n");
 	ret = ad9361_update_rf_bandwidth(phy, phy->current_rx_bw_Hz,
 					phy->current_tx_bw_Hz);
 
+  printf("ad9361_set_rx_sampling_freq is done, return code is %d\n", ret);
 	return ret;
 }
 
