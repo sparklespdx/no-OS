@@ -2754,6 +2754,7 @@ static int32_t ad9361_rf_dc_offset_calib(struct ad9361_rf_phy *phy,
 static int32_t __ad9361_update_rf_bandwidth(struct ad9361_rf_phy *phy,
 		uint32_t rf_rx_bw, uint32_t rf_tx_bw)
 {
+  printf(" __ad9361_update_rf_bandwidth START\n");
 	uint32_t real_rx_bandwidth = rf_rx_bw / 2;
 	uint32_t real_tx_bandwidth = rf_tx_bw / 2;
 	uint32_t bbpll_freq;
@@ -2762,28 +2763,35 @@ static int32_t __ad9361_update_rf_bandwidth(struct ad9361_rf_phy *phy,
 	dev_dbg(&phy->spi->dev, "%s: %"PRIu32" %"PRIu32,
 		__func__, rf_rx_bw, rf_tx_bw);
 
+  printf(" __ad9361_update_rf_bandwidth calling clk_get_rate\n");
 	bbpll_freq = clk_get_rate(phy, phy->ref_clk_scale[BBPLL_CLK]);
 
+
+  printf(" __ad9361_update_rf_bandwidth calling ad9361_rx_bb_analog_filter_calib\n");
 	ret = ad9361_rx_bb_analog_filter_calib(phy,
 				real_rx_bandwidth,
 				bbpll_freq);
 	if (ret < 0)
 		return ret;
 
+  printf(" __ad9361_update_rf_bandwidth calling ad9361_tx_bb_analog_filter_calib\n");
 	ret = ad9361_tx_bb_analog_filter_calib(phy,
 				real_tx_bandwidth,
 				bbpll_freq);
 	if (ret < 0)
 		return ret;
 
+  printf(" __ad9361_update_rf_bandwidth calling ad9361_rx_tia_calib\n");
 	ret = ad9361_rx_tia_calib(phy, real_rx_bandwidth);
 	if (ret < 0)
 		return ret;
 
+  printf(" __ad9361_update_rf_bandwidth calling ad9361_tx_bb_second_filter_calib\n");
 	ret = ad9361_tx_bb_second_filter_calib(phy, real_tx_bandwidth);
 	if (ret < 0)
 		return ret;
 
+  printf(" __ad9361_update_rf_bandwidth calling ad9361_rx_adc_setup\n");
 	ret = ad9361_rx_adc_setup(phy,
 				bbpll_freq,
 				clk_get_rate(phy, phy->ref_clk_scale[ADC_CLK]));
