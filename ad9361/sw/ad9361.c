@@ -1134,7 +1134,6 @@ static int32_t ad9361_check_cal_done(struct ad9361_rf_phy *phy, uint32_t reg,
 
 	do {
 		state = ad9361_spi_readf(phy->spi, reg, mask);
-    printf("ad9361_check_cal_done read the SPI\n");
 		if (state == done_state)
 			return 0;
 
