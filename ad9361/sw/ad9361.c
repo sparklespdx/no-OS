@@ -4274,6 +4274,7 @@ int32_t ad9361_set_trx_clock_chain(struct ad9361_rf_phy *phy,
 	uint32_t *rx_path_clks,
 	uint32_t *tx_path_clks)
 {
+  printf("ad9361_set_trx_clock_chain START\n");
 	int32_t ret, i, j, n;
 
 	dev_dbg(&phy->spi->dev, "%s", __func__);
@@ -4341,6 +4342,7 @@ int32_t ad9361_set_trx_clock_chain(struct ad9361_rf_phy *phy,
 		!(phy->bypass_tx_fir && phy->bypass_rx_fir))
 		ret = ad9361_dig_tune(phy, 0, SKIP_STORE_RESULT);
 
+  printf("ad9361_set_trx_clock_chain END\n");
 	return ad9361_bb_clk_change_handler(phy);
 }
 
