@@ -4394,6 +4394,9 @@ int32_t ad9361_calculate_rf_clock_chain(struct ad9361_rf_phy *phy,
 	uint32_t *rx_path_clks,
 	uint32_t *tx_path_clks)
 {
+  printf("ad9361_calculate_rf_clock_chain START\n");
+  printf("ad9361_calculate_rf_clock_chain tx_sample_rate = %d, rx_sample_rate = %d\n", tx_sample_rate, rx_sample_rate);
+  printf("ad9361_calculate_rf_clock_chain initializing variables\n");
 	uint32_t clktf, clkrf, adc_rate = 0, dac_rate = 0;
 	uint64_t bbpll_rate;
 	int32_t i, index_rx = -1, index_tx = -1, tmp;
@@ -4412,16 +4415,19 @@ int32_t ad9361_calculate_rf_clock_chain(struct ad9361_rf_phy *phy,
 		rx_intdec = 1;
 	else
 		rx_intdec = phy->rx_fir_dec;
+  printf("ad9361_calculate_rf_clock_chain rx_intdec = %d\n". rx_intdec);
 
 	if (phy->bypass_tx_fir)
 		tx_intdec = 1;
 	else
 		tx_intdec = phy->tx_fir_int;
+  printf("ad9361_calculate_rf_clock_chain tx_intdec = %d\n", tx_intdec);
 
 	if ((rate_gov == 1) && ((rx_intdec * tx_sample_rate * 8) < MIN_ADC_CLK)) {
 		recursion = 0;
 		rate_gov = 0;
 	}
+  printf("ad9361_calculate_rf_clock_chain recursion = %d, rate_gov = %d\n", recursion, rate_gov);
 
 	dev_dbg(&phy->spi->dev, "%s: requested rate %"PRIu32" TXFIR int %"PRIu32" RXFIR dec %"PRIu32" mode %s",
 		__func__, tx_sample_rate, tx_intdec, rx_intdec,
