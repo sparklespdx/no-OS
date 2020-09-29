@@ -5348,14 +5348,18 @@ int32_t ad9361_do_calib_run(struct ad9361_rf_phy *phy, uint32_t cal, int32_t arg
 int32_t ad9361_update_rf_bandwidth(struct ad9361_rf_phy *phy,
 	uint32_t rf_rx_bw, uint32_t rf_tx_bw)
 {
+  printf("ad9361_update_rf_bandwidth START\n");
 	int32_t ret;
 
+  printf("ad9361_update_rf_bandwidth calling ad9361_tracking_control\n");
 	ret = ad9361_tracking_control(phy, false, false, false);
 	if (ret < 0)
 		return ret;
 
+  printf("ad9361_update_rf_bandwidth calling ad9361_ensm_force_state\n");
 	ad9361_ensm_force_state(phy, ENSM_STATE_ALERT);
 
+  printf("ad9361_update_rf_bandwidth calling __ad9361_update_rf_bandwidth\n");
 	ret = __ad9361_update_rf_bandwidth(phy, rf_rx_bw, rf_tx_bw);
 	if (ret < 0)
 		return ret;
@@ -5363,17 +5367,22 @@ int32_t ad9361_update_rf_bandwidth(struct ad9361_rf_phy *phy,
 	phy->current_rx_bw_Hz = rf_rx_bw;
 	phy->current_tx_bw_Hz = rf_tx_bw;
 
+  printf("ad9361_update_rf_bandwidth calling ad9361_tx_quad_calib\n");
 	ret = ad9361_tx_quad_calib(phy, rf_rx_bw / 2, rf_tx_bw / 2, -1);
 	if (ret < 0)
 		return ret;
 
+  printf("ad9361_update_rf_bandwidth calling ad9361_tracking_control\n");
 	ret = ad9361_tracking_control(phy, phy->bbdc_track_en,
 		phy->rfdc_track_en, phy->quad_track_en);
 	if (ret < 0)
 		return ret;
 
+  printf("ad9361_update_rf_bandwidth calling ad9361_ensm_restore_prev_state\n");
 	ad9361_ensm_restore_prev_state(phy);
 
+
+  printf("ad9361_update_rf_bandwidth END\n");
 	return 0;
 }
 
