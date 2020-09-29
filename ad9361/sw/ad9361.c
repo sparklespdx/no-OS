@@ -4467,6 +4467,7 @@ int32_t ad9361_calculate_rf_clock_chain(struct ad9361_rf_phy *phy,
 	}
 
 	if ((index_tx < 0 || index_tx > 6 || index_rx < 0 || index_rx > 6) && rate_gov < 7 && recursion) {
+    printf("ad9361_calculate_rf_clock_chain recursing...");
 		return ad9361_calculate_rf_clock_chain(phy, tx_sample_rate,
 			++rate_gov, rx_path_clks, tx_path_clks);
 	}
