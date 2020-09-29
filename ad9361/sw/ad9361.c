@@ -2464,6 +2464,7 @@ static int32_t ad9361_rx_bb_analog_filter_calib(struct ad9361_rf_phy *phy,
 	uint32_t rx_bb_bw,
 	uint32_t bbpll_freq)
 {
+  printf("ad9361_rx_bb_analog_filter_calib START\n");
 	uint32_t target;
 	uint8_t tmp;
 	int32_t ret;
@@ -2474,13 +2475,16 @@ static int32_t ad9361_rx_bb_analog_filter_calib(struct ad9361_rf_phy *phy,
 	rx_bb_bw = clamp(rx_bb_bw, 200000UL, 28000000UL);
 
 	/* 1.4 * BBBW * 2PI / ln(2) */
+  printf("ad9361_rx_bb_analog_filter_calib: 	/* 1.4 * BBBW * 2PI / ln(2) */\n");
 	target = 126906UL * (rx_bb_bw / 10000UL);
 	phy->rxbbf_div = min_t(uint32_t, 511UL, DIV_ROUND_UP(bbpll_freq, target));
 
 	/* Set RX baseband filter divide value */
+  printf("ad9361_rx_bb_analog_filter_calib /* Set RX baseband filter divide value */\n");
 	ad9361_spi_write(phy->spi, REG_RX_BBF_TUNE_DIVIDE, phy->rxbbf_div);
 	ad9361_spi_writef(phy->spi, REG_RX_BBF_TUNE_CONFIG, BIT(0), phy->rxbbf_div >> 8);
 
+  printf("ad9361_rx_bb_analog_filter_calib writing things to SPI\n");
 	/* Write the BBBW into registers 0x1FB and 0x1FC */
 	ad9361_spi_write(phy->spi, REG_RX_BBBW_MHZ, rx_bb_bw / 1000000UL);
 
@@ -2496,6 +2500,7 @@ static int32_t ad9361_rx_bb_analog_filter_calib(struct ad9361_rf_phy *phy,
 
 	/* Start the RX Baseband Filter calibration in register 0x016[7] */
 	/* Calibration is complete when register 0x016[7] self clears */
+  printf("ad9361_rx_bb_analog_filter_calib calling ad9361_run_calibration\n");
 	ret = ad9361_run_calibration(phy, RX_BB_TUNE_CAL);
 
 	/* Disable the RX baseband filter tune circuit, write 0x1E2=3, 0x1E3=3 */
@@ -2504,6 +2509,7 @@ static int32_t ad9361_rx_bb_analog_filter_calib(struct ad9361_rf_phy *phy,
 	ad9361_spi_write(phy->spi, REG_RX2_TUNE_CTRL,
 		RX2_TUNE_RESAMPLE | RX2_PD_TUNE);
 
+  printf("ad9361_rx_bb_analog_filter_calib END\n");
 	return ret;
 }
 
