@@ -4473,7 +4473,7 @@ int32_t ad9361_calculate_rf_clock_chain(struct ad9361_rf_phy *phy,
 	}
 
 	if ((index_tx < 0 || index_tx > 6 || index_rx < 0 || index_rx > 6) && rate_gov < 7 && recursion) {
-    printf("ad9361_calculate_rf_clock_chain recursing...");
+    printf("ad9361_calculate_rf_clock_chain recursing...\n");
 		return ad9361_calculate_rf_clock_chain(phy, tx_sample_rate,
 			++rate_gov, rx_path_clks, tx_path_clks);
 	}
@@ -4485,12 +4485,13 @@ int32_t ad9361_calculate_rf_clock_chain(struct ad9361_rf_phy *phy,
 	}
 
 	/* Calculate target BBPLL rate */
+  printf("ad9361_calculate_rf_clock_chain calculating bbpll rate\n");
 	div = MAX_BBPLL_DIV;
 
 	do {
 		bbpll_rate = (uint64_t)adc_rate * div;
 		div >>= 1;
-
+    printf("ad9361_calculate_rf_clock_chain bbpl_rate = %d, div = %d\n", bbpll_rate, div);
 	} while ((bbpll_rate > MAX_BBPLL_FREQ) && (div >= MIN_BBPLL_DIV));
 
 	rx_path_clks[BBPLL_FREQ] = bbpll_rate;
@@ -4507,6 +4508,7 @@ int32_t ad9361_calculate_rf_clock_chain(struct ad9361_rf_phy *phy,
 	tx_path_clks[CLKTF_FREQ] = tx_path_clks[T1_FREQ] / clk_dividers[index_tx][3];
 	tx_path_clks[TX_SAMPL_FREQ] = tx_path_clks[CLKTF_FREQ] / tx_intdec;
 
+  printf("ad9361_calculate_rf_clock_chain END\n");
 	return 0;
 }
 
